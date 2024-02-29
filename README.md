@@ -40,10 +40,8 @@ Weather App is an Android application that provides real-time weather informatio
 
 ## Dependencies
 
-- Android SDK Version: 21 and above
-- Kotlin Version: 1.5.0
 - Retrofit: For network operations
 - Room Database: For local caching
 - ViewModel & LiveData: Part of Android Jetpack for UI updates
 - Other Jetpack components as required (e.g., Navigation)
-
+- Build in electric eel version of android studio
