@@ -17,6 +17,9 @@ Weather App is an Android application that provides real-time weather informatio
   - ViewModel: Manages UI-related data and handles the communication between the UI and the underlying data model.
   - Room Database: Provides local caching of weather data for offline access.
 
+- **Dependency Injection with Hilt:**
+  - Utilizes Hilt for managing dependency injection, making the codebase more modular and testable.
+
 - **Weather Information:**
   - Displays real-time weather information for the current location.
   - Shows temperature details for six major cities (New York, Singapore, Mumbai, Delhi, Sydney, Melbourne).
