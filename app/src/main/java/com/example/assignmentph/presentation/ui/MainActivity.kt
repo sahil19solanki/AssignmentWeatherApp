@@ -58,6 +58,21 @@ class MainActivity : AppCompatActivity() {
             adapter = weatherAdapter
         }
 
+        allLoc()
+
+        initUi()
+    }
+
+    fun initUi(){
+        binding.apply {
+            button.setOnClickListener {
+                requestLocationPermission()
+                allLoc()
+            }
+        }
+    }
+
+    fun allLoc(){
         if (NetworkUtils.isNetworkAvailable(this)) {
             weatherViewModel.getWeatherForLocations(Utils.getLocations())
             binding.textNoInternet.visibility = View.GONE
@@ -70,10 +85,9 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.LENGTH_LONG
             ).show()
             binding.textNoInternet.visibility = View.VISIBLE
+            binding.loading2.visibility =View.GONE
             binding.recyclerView.visibility =View.GONE
         }
-
-
     }
 
 
@@ -81,16 +95,19 @@ class MainActivity : AppCompatActivity() {
     private fun initObservers() {
         weatherViewModel.localWeatherData.observe(this, Observer { localWeatherData ->
             localWeatherData.forEach { weatherEntity ->
+                binding.loading1.visibility =View.GONE
                 updateUi(weatherEntity)
             }
         })
 
         weatherViewModel.latestNetworkWeatherData.observe(this, Observer { latestNetworkWeatherData ->
             latestNetworkWeatherData?.let {
+                binding.loading1.visibility =View.GONE
                 updateUi(latestNetworkWeatherData)
             }
         })
         weatherViewModel.weatherData.observe(this){
+            binding.loading2.visibility =View.GONE
             weatherAdapter.updateData(it)
         }
     }

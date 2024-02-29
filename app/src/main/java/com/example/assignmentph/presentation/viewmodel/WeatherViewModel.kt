@@ -10,12 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.assignmentph.data.local.WeatherEntity
 import com.example.assignmentph.data.remote.toWeatherEntity
 import com.example.assignmentph.data.repository.WeatherRepository
+import com.example.assignmentph.util.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-// WeatherViewModel.kt
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
@@ -51,7 +51,7 @@ class WeatherViewModel @Inject constructor(
 
     fun getWeatherForLocations(locations: List<Location>) {
         viewModelScope.launch {
-            val apiKey = "f27116535e8bdcf9ac548e88971b1200"
+            val apiKey = Utils.API_KEY
             val weatherEntities = mutableListOf<WeatherEntity>()
 
             for (location in locations) {
@@ -64,7 +64,6 @@ class WeatherViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val weatherData = response.body()
                     weatherData?.let {
-                        // Convert API response to WeatherEntity
                         val timestamp = System.currentTimeMillis()
                         val weatherEntity = it.toWeatherEntity(timestamp, false)
                         weatherEntities.add(weatherEntity)
