@@ -1,7 +1,5 @@
 # Weather App
 
-![Weather App Banner](app_banner.png)
-
 ## Overview
 
 Weather App is an Android application that provides real-time weather information using modern architecture patterns and Jetpack architecture components. It follows the MVVM (Model-View-ViewModel) architecture along with the repository pattern for efficient data management. The app gracefully handles no internet conditions and incorporates local caching for a seamless user experience.
