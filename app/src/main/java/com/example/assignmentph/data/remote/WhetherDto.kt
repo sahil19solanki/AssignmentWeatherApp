@@ -1,5 +1,6 @@
 package com.example.assignmentph.data.remote
 
+import com.example.assignmentph.data.local.WeatherEntity
 import com.google.gson.annotations.SerializedName
 
 
@@ -64,3 +65,16 @@ data class SysDTO(
     @SerializedName("sunrise") val sunrise: Long,
     @SerializedName("sunset") val sunset: Long
 )
+
+
+fun WeatherResponseDTO.toWeatherEntity(timestamp: Long, isFromNetwork: Boolean): WeatherEntity {
+    return WeatherEntity(
+        temperature = main.temp,
+        location = name,
+        windSpeed = wind.speed,
+        timestamp = timestamp,
+        isFromNetwork = isFromNetwork,
+        code = weather[0].icon,
+        humidity = main.humidity
+    )
+}

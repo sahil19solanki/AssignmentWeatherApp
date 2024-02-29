@@ -1,11 +1,16 @@
 package com.example.assignmentph.di
 
+import android.content.Context
+import androidx.room.Room
+import com.example.assignmentph.data.local.WeatherDao
+import com.example.assignmentph.data.local.WeatherDatabase
 import com.example.assignmentph.data.remote.WeatherApi
 import com.example.assignmentph.data.repository.WeatherRepository
 import com.example.assignmentph.data.repository.WeatherRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,7 +33,19 @@ object AppModule {
     }
 
     @Provides
-    fun provideWeatherRepository(weatherApi: WeatherApi): WeatherRepository {
-        return WeatherRepositoryImpl(weatherApi)
+    @Singleton
+    fun provideWeatherDatabase(@ApplicationContext context: Context): WeatherDatabase {
+        return WeatherDatabase.getDatabase(context)
+    }
+
+    @Provides
+    fun provideWeatherDao(weatherDatabase: WeatherDatabase): WeatherDao {
+        return weatherDatabase.weatherDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(weatherApi: WeatherApi, weatherDatabase: WeatherDatabase): WeatherRepository {
+        return WeatherRepositoryImpl(weatherApi, weatherDatabase)
     }
 }

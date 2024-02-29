@@ -1,38 +1,79 @@
 package com.example.assignmentph.presentation.viewmodel
 
+import android.health.connect.datatypes.ExerciseRoute
+import android.location.Location
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.assignmentph.data.local.WeatherEntity
+import com.example.assignmentph.data.remote.toWeatherEntity
 import com.example.assignmentph.data.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+// WeatherViewModel.kt
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
-    fun getWeatherData(latitude: Double, longitude: Double, apiKey: String) {
+
+    private val _localWeatherData = MutableLiveData<List<WeatherEntity>>()
+    val localWeatherData: LiveData<List<WeatherEntity>> get() = _localWeatherData
+
+    private val _latestNetworkWeatherData = MutableLiveData<WeatherEntity?>()
+    val latestNetworkWeatherData: LiveData<WeatherEntity?> get() = _latestNetworkWeatherData
+
+
+    private val _weatherData = MutableLiveData<List<WeatherEntity>>()
+    val weatherData: LiveData<List<WeatherEntity>> get() = _weatherData
+    fun getLocalWeatherData() {
         viewModelScope.launch {
-            try {
-                val response= weatherRepository.getWeatherData(latitude, longitude, apiKey)
-                if (response.isSuccessful) {
-                    // Handle successful response
-                    val data = response.body()
-                    // Process data
-                    Log.d("Weather call is done",data.toString())
-                } else {
-                    // Handle error response
-                    Log.d("Weather call is done","Failed")
-
-                }
-            } catch (e: Exception) {
-                // Handle exception
-                e.printStackTrace()
-                Log.d("Weather call is done",e.message.toString())
-
-            }
+            _localWeatherData.value = weatherRepository.getLocalWeatherData()
         }
     }
 
+    fun getLatestNetworkWeatherData() {
+        viewModelScope.launch {
+            _latestNetworkWeatherData.value = weatherRepository.getLatestNetworkWeatherData()
+        }
+    }
+
+    fun refreshWeatherData(latitude: Double, longitude: Double, apiKey: String) {
+        viewModelScope.launch {
+            _latestNetworkWeatherData.value = weatherRepository.refreshWeatherData(latitude, longitude, apiKey)
+            getLocalWeatherData()
+        }
+    }
+
+
+    fun getWeatherForLocations(locations: List<Location>) {
+        viewModelScope.launch {
+            val apiKey = "f27116535e8bdcf9ac548e88971b1200"
+            val weatherEntities = mutableListOf<WeatherEntity>()
+
+            for (location in locations) {
+                val response = weatherRepository.getWeatherData(
+                    location.latitude,
+                    location.longitude,
+                    apiKey
+                )
+
+                if (response.isSuccessful) {
+                    val weatherData = response.body()
+                    weatherData?.let {
+                        // Convert API response to WeatherEntity
+                        val timestamp = System.currentTimeMillis()
+                        val weatherEntity = it.toWeatherEntity(timestamp, false)
+                        weatherEntities.add(weatherEntity)
+                    }
+                }
+            }
+
+            // Update LiveData with the result
+            _weatherData.value = weatherEntities
+        }
+    }
 }
