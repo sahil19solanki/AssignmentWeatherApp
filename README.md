@@ -11,7 +11,7 @@ Weather App is an Android application that provides real-time weather informatio
 - **Repository Pattern:** Implements a repository layer to abstract the data source and manage data access.
 
 - **Last Updated Time Stamp:** App also shows the the time when you last updated the data or if you are offline you can check when you last fetched the data 
-- 
+  
 - **Jetpack Architecture Components:**
   - LiveData: Ensures data updates are observed and reflected in the UI.
   - ViewModel: Manages UI-related data and handles the communication between the UI and the underlying data model.
