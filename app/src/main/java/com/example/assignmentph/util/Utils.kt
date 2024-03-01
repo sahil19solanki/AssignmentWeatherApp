@@ -33,7 +33,7 @@ object Utils {
     fun getLocations(): List<android.location.Location> {
         return listOf(
             android.location.Location("New York").apply { latitude = 40.7128; longitude = -74.0060 },
-            android.location.Location("Singapore").apply { latitude = 1.3521; longitude = 103.8198 },
+            android.location.Location("Singapore").apply { latitude = 1.30; longitude = 103.8198 },
             android.location.Location("Mumbai").apply { latitude = 19.0760; longitude = 72.8777 },
             android.location.Location("Delhi").apply { latitude = 28.6139; longitude = 77.2090 },
             android.location.Location("Sydney").apply { latitude = -33.8688; longitude = 151.2093 },
